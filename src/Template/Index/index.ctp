@@ -3,4 +3,11 @@
  * @var \App\View\AppView $this
  */
 ?>
-<h1>Hola!</h1>
+<style>
+    .navbar-brand img {
+        display: none;
+    }
+</style>
+<div class="text-center">
+    <?= $this->Html->image('logo_big.png') ?>
+</div>

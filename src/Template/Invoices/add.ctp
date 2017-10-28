@@ -21,28 +21,54 @@ use Cake\Routing\Router;
         <h3 style="margin-bottom: 50px;"><?= __('Logged in as {0}', $this->Auth->user('full_name')) ?></h3>
     <?php endif; ?>
     <a href="#" class="btn btn-primary btn-lg btn-camera" id="showCamera"><i class="fa fa-camera fa-3x"></i></a>
-    <p style="margin-top: 50px;"><?= __('Photograph invoice to spike it') ?></p>
+    <p style="margin-top: 50px;"><a href="#" data-toggle="modal" data-target="#myModal"><?= __('Photograph invoice to spike it') ?></a></p>
 </div>
 <div id="scanner" style="display: none">
     <div style="max-width:500px; margin: 0 auto;">
         <div class="camera-wrapper">
             <div id="camera"></div>
+            <a href="#" id="closeCamera"><i class="fa fa-times fa-2x"></i></a>
             <div class="loader"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>
         </div>
     </div>
     <a href="#" class="btn btn-primary btn-lg btn-camera" id="takeSnapshot"><i class="fa fa-camera fa-2x"></i></a>
 </div>
 
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <?= $this->Form->create(null, ['type' => 'file']); ?>
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel"><?= __('Upload Invoice') ?></h4>
+                </div>
+                <div class="modal-body">
+                    <?= $this->Form->file('file', ['accept' => 'image/*']) ?>
+                </div>
+                <div class="modal-footer">
+                    <?= $this->Form->button(__('Submit'), ['class' => 'btn-primary']) ?>
+                </div>
+            <?= $this->Form->end() ?>
+        </div>
+    </div>
+</div>
+
 <?php if (Configure::read('debug')): ?>
-    <?= $this->Form->create(null, ['type' => 'file']); ?>
-        <?= $this->Form->file('file', ['accept' => 'image/*']) ?>
-        <?= $this->Form->button(__('Submit'), ['class' => 'btn-primary']) ?>
-    <?= $this->Form->end() ?>
 <?php endif; ?>
 
 <?php $this->Html->script('webcam.min.js', ['block' => true]) ?>
 <?php $this->append('script'); ?>
 <script>
+    $('#closeCamera').on('click', function(e) {
+        e.preventDefault();
+
+        Webcam.reset();
+        $('#scanner').hide();
+        $('#intro').fadeIn();
+
+        return false;
+    });
+
     $('#showCamera').on('click', function(e) {
         e.preventDefault();
 
@@ -87,6 +113,6 @@ use Cake\Routing\Router;
         });
 
         return false;
-    })
+    });
 </script>
 <?php $this->end(); ?>

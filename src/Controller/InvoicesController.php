@@ -184,8 +184,7 @@ class InvoicesController extends AppController
      */
     protected function _processInvoice(Invoice $invoice, array $data, array $options = [])
     {
-        // TODO: for demo purposes
-        $data = array_merge($data, $this->_getDemoData());
+        $invoice = $this->Invoices->patchEntity($invoice, $data);
 
         $vision = new \Vision\Vision(
             Configure::read('Vision.key'),
@@ -199,7 +198,7 @@ class InvoicesController extends AppController
 
         //$image = file_get_contents($imagePath);
         $im = imagecreatefromjpeg($imagePath);
-        $red = imagecolorallocate($im, 255, 0, 42);
+        $red = imagecolorallocate($im, 190, 13, 0);
         foreach ($texts as $box) {
             //debug($box->getDescription());
             $points = [];
@@ -209,7 +208,7 @@ class InvoicesController extends AppController
                 array_push($points, $vertex->getX(), $vertex->getY());
             }
 
-            imagesetthickness($im, 2);
+            imagesetthickness($im, 3);
             imagepolygon($im, $points, count($vertices), $red);
         }
 
@@ -218,11 +217,15 @@ class InvoicesController extends AppController
         $image_name = WWW_ROOT . 'img' . DS . $name;
         imagejpeg($im, $image_name);
         imagedestroy($im);
-        //die();
-        $data['data'] = json_encode($texts);
 
-        $invoice = $this->Invoices->patchEntity($invoice, $data);
+        //$data['data'] = json_encode($texts);
+
+
+        $lines = explode("\n", $texts[0]->getDescription());
+        $invoice = $this->Invoices->parseSupplierData($invoice, $lines);
+
         if (!$this->Invoices->save($invoice)) {
+            debug($invoice);die;
             $this->Flash->error('Invoice could not be saved');
 
             return false;
@@ -237,6 +240,8 @@ class InvoicesController extends AppController
 
             return false;
         }
+
+        unlink($image_name);
 
         return $invoice;
     }
@@ -305,23 +310,5 @@ class InvoicesController extends AppController
 
         $invoice->payment_id = $payment->id;
         $this->Invoices->saveOrFail($invoice);
-    }
-
-    /**
-     * Demo data
-     *
-     * @return array
-     */
-    protected function _getDemoData()
-    {
-        return [
-            'supplier_id' => 4,
-            'number' => '478013',
-            'invoice_date' => '2014-01-22',
-            'due' => '2014-01-29',
-            'amount' => 684.79,
-            'mapped_account' => 'Xero - Electricity',
-            'payment_account_token' => 'operating',
-        ];
     }
 }

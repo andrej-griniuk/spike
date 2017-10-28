@@ -46,6 +46,14 @@ img {
     overflow: hidden;
 }
 
+#closeCamera {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 888;
+    padding: 10px 15px;
+}
+
 #scanner {
     margin-top: -20px;
 }
@@ -58,6 +66,7 @@ img {
     right: 0;
     display: none;
     background: rgba(255, 255, 255, 0.5);
+    z-index: 999;
 }
 #scanner .loader i {
     position: absolute;

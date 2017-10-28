@@ -1,8 +1,12 @@
 <?php
 namespace App\Model\Table;
 
+use App\Model\Entity\Invoice;
+use Cake\I18n\Date;
+use Cake\I18n\Time;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\Utility\Hash;
 use Cake\Validation\Validator;
 
 /**
@@ -134,5 +138,181 @@ class InvoicesTable extends Table
         $rules->add($rules->existsIn(['payment_id'], 'Payments'));
 
         return $rules;
+    }
+
+    public function parseSupplierData(Invoice $invoice, array $lines = [])
+    {
+        //debug($lines);die;
+
+        $data = [];
+        $suppliers = $this->Suppliers->find()->all();
+        foreach ($suppliers as $supplier) {
+            if ($supplier->identifier && in_array($supplier->identifier, $lines)) {
+                $parser = "_parse{$supplier->slug}";
+                $data = $this->$parser($lines);
+                $data['supplier_id'] = $supplier->id;
+
+                break;
+            }
+        }
+
+        $data += $this->_getDefaultData();
+        $invoice = $this->patchEntity($invoice, $data);
+        //debug($invoice);die;
+
+        return $invoice;
+    }
+
+    protected function _parseTheKnightAlliance(array $lines = [])
+    {
+        $data = [];
+        foreach ($lines as $k => $line) {
+            if (strpos($line, 'Invoice No.') !== false) {
+                $data['number'] = trim(str_replace('Invoice No.', '', $line));
+
+                continue;
+            }
+
+            if (strpos($line, 'Print Date') !== false) {
+                $data['invoice_date'] = $this->_parseAustralianDate(trim(str_replace('Print Date', '', $line)));
+
+                continue;
+            }
+
+            if (strpos($line, 'Current Charges Payable By') !== false) {
+                $data['due'] = $this->_parseAustralianDate(trim(str_replace('Current Charges Payable By', '', $line)));
+
+                continue;
+            }
+
+            if (strpos($line, 'Amount Payable') !== false) {
+                $data['amount'] = (float)trim(str_replace('$', '', $lines[$k + 1]));
+
+                continue;
+            }
+        }
+
+        return $data;
+    }
+
+    protected function _parseSydneyWater(array $lines = [])
+    {
+        $data = [
+            'invoice_date' => new Date(),
+            'due' => new Date(),
+        ];
+
+        foreach ($lines as $k => $line) {
+            if (strpos($line, 'Payment number') !== false) {
+                $data['number'] = trim(str_replace(' ', '', $lines[$k + 1]));
+
+                continue;
+            }
+
+            if (strpos($line, 'Total amount due') !== false && !Hash::get($data, 'amount')) {
+                $data['amount'] = (float)trim(str_replace('$', '', $lines[$k + 1]));
+
+                continue;
+            }
+        }
+
+        return $data;
+    }
+
+    protected function _parseRedEnergy(array $lines = [])
+    {
+        $data = [];
+        foreach ($lines as $k => $line) {
+            if (strpos($line, 'Customer Number:') !== false) {
+                $data['number'] = trim($lines[$k + 1]);
+
+                continue;
+            }
+
+            if (strpos($line, 'ISSUE DATE') !== false) {
+                $data['invoice_date'] = new Date(trim($lines[$k + 1]));
+
+                continue;
+            }
+
+            if (strpos($line, 'Due Date:') !== false) {
+                $data['due'] = new Date(trim($lines[$k + 3]));
+
+                continue;
+            }
+
+            if (strpos($line, 'Amount Due if paid by') !== false) {
+                $data['amount'] = (float)trim(str_replace('$', '', $lines[$k + 3]));
+
+                continue;
+            }
+        }
+
+        return $data;
+    }
+
+    protected function _parseAgl(array $lines = [])
+    {
+        $data = [
+            'invoice_date' => new Date(),
+        ];
+
+        foreach ($lines as $k => $line) {
+            if (strpos($line, 'Account number:') !== false) {
+                $data['number'] = trim(str_replace(' ', '', $lines[$k + 3]));
+
+                continue;
+            }
+
+            if (strpos($line, 'Due date') !== false) {
+                $data['due'] = new Date($lines[$k - 2]);
+
+                continue;
+            }
+
+            if (strpos($line, 'Total due') !== false) {
+                $data['amount'] = (float)trim(str_replace('$', '', $lines[$k - 1]));
+
+                continue;
+            }
+        }
+
+        return $data;
+    }
+
+    protected function _parseAustralianDate($date)
+    {
+        $date = explode('/', $date);
+        $year = $date[2];
+        $month = $date[1];
+        $day = $date[0];
+
+        if ($month == '0') {
+            $month = '01';
+        }
+
+        if ($day == '0') {
+            $day = '01';
+        }
+
+        return new Date("{$year}-{$month}-{$day}");
+    }
+
+    /**
+     * Default data
+     *
+     * @return array
+     */
+    protected function _getDefaultData()
+    {
+        return [
+            'supplier_id' => 4,
+            'number' => '478013',
+            'invoice_date' => '2014-01-01',
+            'due' => '2014-01-31',
+            'amount' => 684.79,
+            'mapped_account' => 'Xero - Electricity',
+            'payment_account_token' => 'operating',
+        ];
     }
 }

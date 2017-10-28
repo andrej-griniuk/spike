@@ -65,7 +65,7 @@ class AppController extends Controller
             ],
             'loginRedirect'  => [
                 'controller' => 'Invoices',
-                'action'     => 'index',
+                'action'     => 'add',
                 'plugin'     => false,
                 'prefix'     => false,
             ],
