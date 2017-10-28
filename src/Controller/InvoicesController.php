@@ -93,7 +93,9 @@ class InvoicesController extends AppController
             $invoice = $this->Invoices->patchEntity($invoice, $this->request->getData());
             if ($this->Invoices->save($invoice)) {
                 if ($invoice->is_approved) {
-                    $this->_pay($invoice);
+                    if (!$invoice->is_paid) {
+                        $this->_pay($invoice);
+                    }
 
                     return $this->redirect(['action' => 'process', $invoice->id]);
                 } else {

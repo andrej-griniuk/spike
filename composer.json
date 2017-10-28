@@ -16,7 +16,8 @@
         "burzum/file-storage": "^1.2",
         "burzum/cakephp-imagine-plugin": "^2.1",
         "cloudinary/cloudinary_php": "^1.8",
-        "friendsofcake/crud-view": "^0.9.4"
+        "friendsofcake/crud-view": "^0.9.4",
+        "ext-gd": "*"
     },
     "require-dev": {
         "psy/psysh": "@stable",
