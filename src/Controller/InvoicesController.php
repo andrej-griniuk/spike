@@ -13,6 +13,11 @@ use Cake\Core\Configure;
 class InvoicesController extends AppController
 {
 
+    public function index()
+    {
+
+    }
+
     /**
      * Scan method
      *
@@ -51,6 +56,7 @@ class InvoicesController extends AppController
                     array_push($points, $vertex->getX(), $vertex->getY());
                 }
 
+                imagesetthickness ($im, 2);
                 imagepolygon($im, $points, count($verticles), $red);
 
             }

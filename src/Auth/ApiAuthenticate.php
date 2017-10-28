@@ -91,15 +91,23 @@ class ApiAuthenticate extends BaseAuthenticate
 
         $data = Hash::get($response->json, 'customerDetailsResponse');
 
-        $Users = TableRegistry::get($this->getConfig('userModel'));
+        //$Users = TableRegistry::get($this->getConfig('userModel'));
         /** @var \App\Model\Entity\User $user */
-        $user = $Users->findOrCreate([$this->getConfig('fields.username') => $username]);
+        /*$user = $Users->findOrCreate([$this->getConfig('fields.username') => $username]);
         $user->first_name = (string)Hash::get($data, 'person.firstName');
         $user->last_name = (string)Hash::get($data, 'person.lastName');
         $user->email = (string)Hash::get($data, 'email.id');
         $Users->saveOrFail($user);
-
         $user = $user->toArray();
+        */
+
+        $user = [
+            'first_name' => (string)Hash::get($data, 'person.firstName'),
+            'last_name' => (string)Hash::get($data, 'person.lastName'),
+            'full_name' => Hash::get($data, 'person.firstName') . ' ' . Hash::get($data, 'person.lastName'),
+            'email' => (string)Hash::get($data, 'email.id'),
+        ];
+
         $user['tokens'] = Hash::get($loginResponse, 'tokens');
 
         return $user;

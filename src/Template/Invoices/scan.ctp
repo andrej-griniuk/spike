@@ -8,11 +8,10 @@
     <?= $this->Form->button(__('Submit'), ['class' => 'btn-primary']) ?>
 <?= $this->Form->end() ?>
 <?php if (isset($name)): ?>
-    <?php debug($name); ?>
     <?= $this->Html->image($name) ?>
 <?php endif; ?>
-
-
+<?php
+/*
 <?= $this->Html->script('webcam.min.js') ?>
 
 <div id="my_camera" style="width:320px; height:240px;"></div>
@@ -29,3 +28,5 @@
 </script>
 
 <a href="javascript:void(take_snapshot())">Take Snapshot</a>
+
+*/
