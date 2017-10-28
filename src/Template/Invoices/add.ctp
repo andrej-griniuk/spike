@@ -121,7 +121,7 @@ use Cake\Routing\Router;
                 });
 
             /*
-            Webcam.upload(data_uri, '<?= Router::url(['controller' => 'Invoices', 'action' => 'add', $user ? $user->username : null, '_ext' => 'json'], true) ?>', function(code, text) {
+            Webcam.upload(data_uri, '<?= Router::url(['controller' => 'Invoices', 'action' => 'add', $user ? $user->username : null, '_ext' => 'json', '_ssl' => true], true) ?>', function(code, text) {
                alert('response');
                 $('#scanner').removeClass('loading');
                 $('#takeSnapshot').show();
