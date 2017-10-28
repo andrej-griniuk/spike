@@ -60,7 +60,7 @@ class InvoicesController extends AppController
     public function view($id = null)
     {
         $invoice = $this->Invoices->get($id, [
-            'contain' => ['Users']
+            'contain' => ['Users', 'Suppliers', 'Scans']
         ]);
 
         $this->set('invoice', $invoice);
