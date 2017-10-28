@@ -32,7 +32,7 @@ class AddSupplierIdentifierAndSlug extends AbstractMigration
         $suppliers = $Suppliers->find()->all();
         foreach ($suppliers as $supplier) {
             if ($supplier->name == 'AGL') {
-                $supplier->slug = 'Alg';
+                $supplier->slug = 'Agl';
                 $supplier->identifier = 'AGL electricity';
             } elseif ($supplier->name == 'Sydney Water') {
                 $supplier->slug = 'SydneyWater';

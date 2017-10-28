@@ -19,7 +19,7 @@ use Cake\Utility\Hash;
             <span class="pull-right">#<?= h(Hash::get($account, 'accountIdDisplay')) ?></span>
         </div>
         <div class="panel-body">
-            <table class="table">
+            <table class="table" style="margin-bottom:0">
                 <?php if ($category = Hash::get($account, 'category')): ?>
                 <tr>
                     <th><?= __('Category') ?></th>
