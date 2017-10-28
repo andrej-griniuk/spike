@@ -225,7 +225,7 @@ class InvoicesController extends AppController
         imagedestroy($im);
 
         //$data['data'] = json_encode($texts);
-        
+
         $lines = explode("\n", $texts[0]->getDescription());
         $invoice = $this->Invoices->parseSupplierData($invoice, $lines);
 

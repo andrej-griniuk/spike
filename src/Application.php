@@ -14,6 +14,7 @@
  */
 namespace App;
 
+use App\Middleware\HttpsMiddleware;
 use Cake\Core\Configure;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\BaseApplication;
@@ -40,6 +41,8 @@ class Application extends BaseApplication
             // Catch any exceptions in the lower layers,
             // and make an error page/response
             ->add(ErrorHandlerMiddleware::class)
+
+            ->add(HttpsMiddleware::class)
 
             // Handle plugin/theme assets like CakePHP normally does.
             ->add(AssetMiddleware::class)
