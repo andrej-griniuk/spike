@@ -197,7 +197,14 @@ class InvoicesController extends AppController
             [new \Vision\Feature(\Vision\Feature::TEXT_DETECTION, 100)]
         );
 
-        $imagePath = $this->request->getData('file.tmp_name');
+        if ($imageBase64 = $this->request->getData('file_base64')) {
+            $imageBase64 = str_replace('data:image/jpeg;base64,', '', $imageBase64);
+            $imagePath = TMP . DS . time() . '-base64.jpg';
+            file_put_contents($imagePath, base64_decode($imageBase64));
+        } else {
+            $imagePath = $this->request->getData('file.tmp_name');
+        }
+
         $response = $vision->request(new \Vision\Image($imagePath));
 
         $texts = $response->getTextAnnotations();
@@ -226,7 +233,10 @@ class InvoicesController extends AppController
 
         //$data['data'] = json_encode($texts);
 
-        $lines = explode("\n", $texts[0]->getDescription());
+        $lines = [];
+        if ($texts) {
+            $lines = explode("\n", $texts[0]->getDescription());
+        }
         $invoice = $this->Invoices->parseSupplierData($invoice, $lines);
 
         if (!$this->Invoices->save($invoice)) {
@@ -237,6 +247,7 @@ class InvoicesController extends AppController
         }
 
         $data = $this->request->getData();
+        $data['file']['name'] = $fileName;
         $data['file']['tmp_name'] = $filePath;
 
         $image = $this->Invoices->Scans->newEntity($data);

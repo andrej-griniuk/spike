@@ -90,11 +90,37 @@ use Cake\Routing\Router;
     $('#takeSnapshot').on('click', function(e) {
         e.preventDefault();
 
-        alert('click');
         Webcam.snap(function(data_uri) {
             $('#scanner').addClass('loading');
             $('#takeSnapshot').hide();
-            alert('snap');
+
+            $.ajax({
+                    url: '<?= Router::url(['controller' => 'Invoices', 'action' => 'add', $user ? $user->username : null, '_ext' => 'json'], true) ?>',
+                    type: 'json',
+                    method: 'post',
+                    data: {
+                        'file_base64': data_uri
+                    }
+                })
+                .done(function(data, textStatus, jqXHR) {
+                    console.log(data);
+                    if (data.success !== undefined && data.success) {
+                        window.location.replace('<?= Router::url(['controller' => 'Invoices', 'action' => 'edit'], true) ?>/' + data.invoice.id);
+                    } else {
+                        alert('Something went wrong.');
+                    }
+                })
+                .fail(function(jqXHR, textStatus, errorThrown) {
+                    alert('Something went wrong: ' + textStatus);
+                    console.log(jqXHR);
+                    console.log(errorThrown);
+                })
+                .always(function() {
+                    $('#scanner').removeClass('loading');
+                    $('#takeSnapshot').show();
+                });
+
+            /*
             Webcam.upload(data_uri, '<?= Router::url(['controller' => 'Invoices', 'action' => 'add', $user ? $user->username : null, '_ext' => 'json'], true) ?>', function(code, text) {
                alert('response');
                 $('#scanner').removeClass('loading');
@@ -108,11 +134,8 @@ use Cake\Routing\Router;
                     console.log(text);
                     console.log(response);
                 }
-                //alert('done!');
-                // Upload complete!
-                // 'code' will be the HTTP response code from the server, e.g. 200
-                // 'text' will be the raw response content
             } );
+            */
         });
 
         return false;
