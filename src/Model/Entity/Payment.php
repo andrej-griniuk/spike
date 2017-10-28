@@ -12,6 +12,7 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\FrozenTime $modified
  *
  * @property \App\Model\Entity\Invoice[] $invoices
+ * @property \App\Model\Entity\Invoice $invoice
  */
 class Payment extends Entity
 {

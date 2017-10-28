@@ -4,7 +4,7 @@
  * @var \App\Model\Entity\Supplier[]|\Cake\Collection\CollectionInterface $suppliers
  */
 ?>
-<ul class="nav nav-pills">
+<ul class="nav nav-pills" style="margin-bottom:10px;">
     <li><?= $this->Html->link(__('New Supplier'), ['action' => 'add']) ?></li>
     <li><?= $this->Html->link(__('List Invoices'), ['controller' => 'Invoices', 'action' => 'index']) ?></li>
     <li><?= $this->Html->link(__('New Invoice'), ['controller' => 'Invoices', 'action' => 'add']) ?></li>
@@ -17,7 +17,7 @@
                 <th scope="col"><?= $this->Paginator->sort('name') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('created') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('modified') ?></th>
-                <th scope="col" class="actions"><?= __('Actions') ?></th>
+                <th scope="col" class="actions text-right"><?= __('Actions') ?></th>
             </tr>
         </thead>
         <tbody>
@@ -27,10 +27,9 @@
                 <td><?= h($supplier->name) ?></td>
                 <td><?= h($supplier->created) ?></td>
                 <td><?= h($supplier->modified) ?></td>
-                <td class="actions">
-                    <?= $this->Html->link(__('View'), ['action' => 'view', $supplier->id]) ?>
-                    <?= $this->Html->link(__('Edit'), ['action' => 'edit', $supplier->id]) ?>
-                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $supplier->id], ['confirm' => __('Are you sure you want to delete # {0}?', $supplier->id)]) ?>
+                <td class="actions text-right">
+                    <?= $this->Html->link('<i class="fa fa-eye"></i> ' . __('View'), ['action' => 'view', $supplier->id], ['escape' => false, 'class' => 'btn btn-xs btn-info']) ?>
+                    <?= $this->Html->link('<i class="fa fa-pencil"></i> ' . __('Edit'), ['action' => 'edit', $supplier->id], ['escape' => false, 'class' => 'btn btn-xs btn-success']) ?>
                 </td>
             </tr>
             <?php endforeach; ?>

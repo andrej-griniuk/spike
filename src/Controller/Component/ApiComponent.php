@@ -69,7 +69,7 @@ class ApiComponent extends Component
         $response = $this->http->{$method}($url, $data, $options);
 
         if (strtolower(Hash::get($response->json, 'status.message')) != 'success') {
-            $this->getController()->redirect($this->getController()->Auth->logout());
+            //$this->getController()->redirect($this->getController()->Auth->logout());
 
             return [];
         }

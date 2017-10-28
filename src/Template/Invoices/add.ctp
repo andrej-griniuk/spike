@@ -19,7 +19,7 @@ use Cake\Routing\Router;
     <?php if ($user): ?>
         <h3 style="margin-bottom: 50px;"><?= __('Submit invoice for {0}', $user->full_name) ?></h3>
     <?php else: ?>
-        <h3 style="margin-bottom: 50px;"><?= __('Logged in as {0}', $this->Auth->user('full_name')) ?></h3>
+        <h3 style="margin-bottom: 50px;"><?= __('Welcome {0}', $this->Auth->user('full_name')) ?></h3>
     <?php endif; ?>
     <a href="#" class="btn btn-primary btn-lg btn-camera" id="showCamera"><i class="fa fa-camera fa-3x"></i></a>
     <p style="margin-top: 50px;"><a href="#" data-toggle="modal" data-target="#myModal"><?= __('Photograph invoice to spike it') ?></a></p>

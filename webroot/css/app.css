@@ -102,3 +102,7 @@ img {
 pre a {
     color: #be0d00;
 }
+
+.nav.nav-pills a {
+    background-color: #171717;
+}

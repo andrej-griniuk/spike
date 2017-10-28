@@ -25,7 +25,8 @@
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"> <?= h($this->Auth->user('full_name')) ?> <span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><?= $this->Html->link(__('Share with Supplier'), ['controller' => 'Invoices', 'action' => 'share']) ?></li>
-                            <li><?= $this->Html->link(__('Profile'), ['controller' => 'Users', 'action' => 'profile']) ?></li>
+                            <li><?= $this->Html->link(__('Accounts'), ['controller' => 'Accounts', 'action' => 'index']) ?></li>
+                            <li><?= $this->Html->link(__('Payments'), ['controller' => 'Payments', 'action' => 'index']) ?></li>
                             <li><?= $this->Html->link(__('Sign Out'), ['controller' => 'Users', 'action' => 'logout']) ?></li>
                         </ul>
                     </li>

@@ -40,9 +40,7 @@ class PaymentsTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->hasMany('Invoices', [
-            'foreignKey' => 'payment_id'
-        ]);
+        $this->hasOne('Invoices');
     }
 
     /**
@@ -59,8 +57,8 @@ class PaymentsTable extends Table
 
         $validator
             ->scalar('reference')
-            ->requirePresence('reference', 'create')
-            ->notEmpty('reference');
+            //->requirePresence('reference', 'create')
+            ->allowEmpty('reference');
 
         return $validator;
     }

@@ -6,6 +6,7 @@ use Cake\Core\Configure;
 use Cake\Datasource\EntityInterface;
 use Cake\Network\Exception\UnauthorizedException;
 use Cake\Utility\Hash;
+use Cake\Utility\Text;
 
 /**
  * Invoices Controller
@@ -279,9 +280,6 @@ class InvoicesController extends AppController
      */
     protected function _pay(Invoice $invoice)
     {
-        // TODO: for demo purposes
-        return;
-
         $data = [
             "paymentRequest" => [
                 "from" => [
@@ -289,6 +287,7 @@ class InvoicesController extends AppController
                         "apiStructType" => "accountToken",
                         "accountToken" => [
                             "token" => $invoice->payment_account_token,
+                            //"token" => '4XWiVi2ux-jvwC7uhgqzo1U6JBqwoHHbQmlh0mjlbWfJ1mr9C0C9hPdYtCZBcbnA',
                         ]
                     ]
                 ],
@@ -297,21 +296,23 @@ class InvoicesController extends AppController
                         "apiStructType" => "accountToken",
                         "accountToken" => [
                             "token" => $invoice->supplier->account_token,
+                            //"token" => 'njvyCMPK68fXdl7vlzD8ju31dDr2Z8DNXi6ERU61ezCcYKpaXz4bCfeeXo1qj6qf',
                         ]
                     ]
                 ],
                 "method" => [
                     "apiStructType" => "transfer",
                     "transfer" => [
-                        "amount" => $invoice->amount,
+                        "amount" => (string)$invoice->amount,
                         "statementReference" => __('Invoice {0}', $invoice->number),
-                        "remitterName" => $this->Auth->user('full_name'),
+                        "remitterName" => (string)$this->Auth->user('first_name') . ' ' . (string)$this->Auth->user('last_name'),
                     ],
                 ],
                 "recurrence" => [
                     "apiStructType" => "onceOff",
                     "onceOff" => [
-                        "paymentDate" => date('Y-m-d')
+                        //"paymentDate" => date('Y-m-d')
+                        "paymentDate" => '2012-12-12'
                     ]
                 ]
             ]
@@ -320,7 +321,7 @@ class InvoicesController extends AppController
         $response = $this->Api->post('payment', $data);
 
         $payment = $this->Invoices->Payments->newEntity([
-            'reference' => Hash::get($response, 'paymentResponse', 'paymentReference'),
+            'reference' => Hash::get($response, 'paymentResponse.paymentReference', substr(Text::uuid(), 0, 7)),
         ]);
         $this->Invoices->Payments->saveOrFail($payment);
 

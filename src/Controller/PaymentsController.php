@@ -20,7 +20,13 @@ class PaymentsController extends AppController
      */
     public function index()
     {
-        $payments = $this->paginate($this->Payments);
+        $payments = $this->paginate(
+            $this->Payments,
+            [
+                'order' => ['Payments.id' => 'DESC'],
+                'contain' => ['Invoices.Suppliers']
+            ]
+        );
 
         $this->set(compact('payments'));
         $this->set('_serialize', ['payments']);
