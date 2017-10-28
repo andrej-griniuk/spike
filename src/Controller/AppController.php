@@ -79,6 +79,8 @@ class AppController extends Controller
 
         $this->Auth->deny();
 
+        $this->set('isMobile', $this->RequestHandler->isMobile());
+
         /*
          * Enable the following components for recommended CakePHP security settings.
          * see https://book.cakephp.org/3.0/en/controllers/components/security.html

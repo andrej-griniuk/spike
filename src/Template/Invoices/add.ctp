@@ -2,6 +2,7 @@
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\User $user
+ * @var bool $isMobile
  */
 
 use Cake\Core\Configure;
@@ -75,7 +76,7 @@ use Cake\Routing\Router;
         $('#intro').hide();
         $('#scanner').fadeIn();
 
-        <?php if (!Configure::read('debug')): ?>
+        <?php if ($isMobile): ?>
         Webcam.set('constraints', {
             facingMode: { exact: 'environment' }
         });
@@ -89,11 +90,13 @@ use Cake\Routing\Router;
     $('#takeSnapshot').on('click', function(e) {
         e.preventDefault();
 
-        $('#scanner').addClass('loading');
-        $('#takeSnapshot').hide();
-
+        alert('click');
         Webcam.snap(function(data_uri) {
+            $('#scanner').addClass('loading');
+            $('#takeSnapshot').hide();
+            alert('snap');
             Webcam.upload(data_uri, '<?= Router::url(['controller' => 'Invoices', 'action' => 'add', $user ? $user->username : null, '_ext' => 'json'], true) ?>', function(code, text) {
+               alert('response');
                 $('#scanner').removeClass('loading');
                 $('#takeSnapshot').show();
                 var response = JSON.parse(text);
