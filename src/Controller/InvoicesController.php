@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Model\Entity\Invoice;
 use Cake\Core\Configure;
 use Cake\Datasource\EntityInterface;
+use Cake\Network\Exception\UnauthorizedException;
 use Cake\Utility\Hash;
 
 /**
@@ -78,6 +79,11 @@ class InvoicesController extends AppController
         if ($username) {
             $user = $this->Invoices->Users->find()->where(compact('username'))->first();
         }
+
+        if (!$user && !$this->Auth->user()) {
+            return $this->redirect(['controller' => 'Users', 'action' => 'login']);
+        }
+
         $success = true;
         $invoice = $this->Invoices->newEntity();
         $invoice->user_id = $user

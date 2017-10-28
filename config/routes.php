@@ -50,7 +50,7 @@ Router::scope('/', function (RouteBuilder $routes) {
      * its action called 'display', and we pass a param to select the view file
      * to use (in this case, src/Template/Pages/home.ctp)...
      */
-    $routes->connect('/', ['controller' => 'Invoices', 'action' => 'add']);
+    $routes->connect('/', ['controller' => 'Index', 'action' => 'index']);
     $routes->connect('/sup/:id', ['controller' => 'Invoices', 'action' => 'add'], ['pass' => ['id']]);
 
     /**
