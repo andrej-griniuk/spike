@@ -219,14 +219,13 @@ class InvoicesController extends AppController
         }
 
         // give our image a name and store it
-        $name = 'invoices' . DS . time() . '.jpg';
-        $image_name = WWW_ROOT . 'img' . DS . $name;
-        imagejpeg($im, $image_name);
+        $fileName = time() . '.jpg';
+        $filePath = TMP . DS . $fileName;
+        imagejpeg($im, $filePath);
         imagedestroy($im);
 
         //$data['data'] = json_encode($texts);
-
-
+        
         $lines = explode("\n", $texts[0]->getDescription());
         $invoice = $this->Invoices->parseSupplierData($invoice, $lines);
 
@@ -238,7 +237,7 @@ class InvoicesController extends AppController
         }
 
         $data = $this->request->getData();
-        $data['file']['tmp_name'] = $image_name;
+        $data['file']['tmp_name'] = $filePath;
 
         $image = $this->Invoices->Scans->newEntity($data);
         if (!$this->Invoices->Scans->upload($invoice->id, $image)) {
@@ -247,7 +246,7 @@ class InvoicesController extends AppController
             return false;
         }
 
-        unlink($image_name);
+        unlink($filePath);
 
         return $invoice;
     }
