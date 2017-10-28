@@ -17,6 +17,22 @@ class InvoicesController extends AppController
 {
 
     /**
+     * Initialization hook method.
+     *
+     * Use this method to add common initialization code like loading components.
+     *
+     * e.g. `$this->loadComponent('Security');`
+     *
+     * @return void
+     */
+    public function initialize()
+    {
+        parent::initialize();
+
+        $this->Auth->allow(['add', 'edit']);
+    }
+
+    /**
      * Index method
      *
      * @return \Cake\Http\Response|void
@@ -53,26 +69,34 @@ class InvoicesController extends AppController
     /**
      * Add method
      *
-     * @param int|null $userId
+     * @param int|null $username
      * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
      */
-    public function add($userId = null)
+    public function add($username = null)
     {
+        $user = null;
+        if ($username) {
+            $user = $this->Invoices->Users->find()->where(compact('username'))->first();
+        }
         $success = true;
         $invoice = $this->Invoices->newEntity();
+        $invoice->user_id = $user
+            ? $user->id
+            : $this->Auth->user('id');
+        $invoice->is_approved = $user
+            ? false
+            : true;
         if ($this->request->is('post')) {
             if (!$this->_processInvoice($invoice, $this->request->getData())) {
                 $success = false;
             }
-
-            //$this->Flash->success(__('The invoice has been saved.'));
 
             if (!$this->request->is('json')) {
                 return $this->redirect(['action' => 'edit', $invoice->id]);
             }
         }
 
-        $this->set(compact('invoice', 'success', 'userId'));
+        $this->set(compact('invoice', 'success', 'username', 'user'));
         $this->set('_serialize', ['invoice', 'success']);
     }
 
@@ -86,7 +110,7 @@ class InvoicesController extends AppController
     public function edit($id = null)
     {
         $invoice = $this->Invoices->get($id, [
-            'contain' => ['Scans', 'Suppliers']
+            'contain' => ['Scans', 'Suppliers', 'Users']
         ]);
 
         if ($this->request->is(['patch', 'post', 'put'])) {
@@ -99,7 +123,7 @@ class InvoicesController extends AppController
 
                     return $this->redirect(['action' => 'process', $invoice->id]);
                 } else {
-                    return $this->redirect(['action' => 'add', $invoice->user_id]);
+                    return $this->redirect(['action' => 'add', $invoice->user->username]);
                 }
             }
             $this->Flash->error(__('The invoice could not be saved. Please, try again.'));
@@ -160,8 +184,6 @@ class InvoicesController extends AppController
      */
     protected function _processInvoice(Invoice $invoice, array $data, array $options = [])
     {
-        $invoice->user_id = $this->Auth->user('id');
-
         // TODO: for demo purposes
         $data = array_merge($data, $this->_getDemoData());
 
@@ -217,6 +239,16 @@ class InvoicesController extends AppController
         }
 
         return $invoice;
+    }
+
+    public function optimise()
+    {
+
+    }
+
+    public function share()
+    {
+
     }
 
     /**
@@ -290,7 +322,6 @@ class InvoicesController extends AppController
             'amount' => 684.79,
             'mapped_account' => 'Xero - Electricity',
             'payment_account_token' => 'operating',
-            'is_approved' => true,
         ];
     }
 }

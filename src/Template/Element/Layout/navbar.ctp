@@ -20,9 +20,11 @@
                     <li><?= $this->Html->link(__('Suppliers'), ['controller' => 'Suppliers', 'action' => 'index']) ?></li>
                     <li><?= $this->Html->link(__('Invoices'), ['controller' => 'Invoices', 'action' => 'index']) ?></li>
                     <li><?= $this->Html->link(__('Scan'), ['controller' => 'Invoices', 'action' => 'add']) ?></li>
+                    <li><?= $this->Html->link(__('Optimise'), ['controller' => 'Invoices', 'action' => 'optimise']) ?></li>
                     <li role="presentation" class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"> <?= h($this->Auth->user('full_name')) ?> <span class="caret"></span></a>
                         <ul class="dropdown-menu">
+                            <li><?= $this->Html->link(__('Share with Supplier'), ['controller' => 'Invoices', 'action' => 'share']) ?></li>
                             <li><?= $this->Html->link(__('Profile'), ['controller' => 'Users', 'action' => 'profile']) ?></li>
                             <li><?= $this->Html->link(__('Sign Out'), ['controller' => 'Users', 'action' => 'logout']) ?></li>
                         </ul>

@@ -17,8 +17,9 @@ $(function() {
         }
 
         picker.datetimepicker({
-            locale: $(this).data('locale'),
-            format: $(this).data('format'),
+            //locale: $(this).data('locale'),
+            //format: $(this).data('format'),
+            format: 'YYYY-MM-DD',
             date: date ? date : picker.val()
         });
     });

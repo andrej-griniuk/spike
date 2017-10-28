@@ -38,7 +38,8 @@ img {
 #camera {
     position: absolute;
     top: 0;
-    bottom: -41.43%;
+    /*bottom: -41.43%;*/
+    bottom: -35%;
     left: 0;
     right: 0;
     border: 3px dashed #fff;
@@ -47,6 +48,25 @@ img {
 
 #scanner {
     margin-top: -20px;
+}
+
+#scanner .loader {
+    position: absolute;
+    top: 0;
+    bottom: -35%;
+    left: 0;
+    right: 0;
+    display: none;
+    background: rgba(255, 255, 255, 0.5);
+}
+#scanner .loader i {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -35px;
+}
+#scanner.loading .loader {
+    display: block;
 }
 
 #takeSnapshot {
@@ -68,4 +88,8 @@ img {
     color: #ffffff;
     background-color: #2c2c2c;
     border-color: #272727;
+}
+
+pre a {
+    color: #be0d00;
 }
