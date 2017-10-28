@@ -95,7 +95,7 @@ use Cake\Routing\Router;
             $('#takeSnapshot').hide();
 
             $.ajax({
-                    url: '<?= Router::url(['controller' => 'Invoices', 'action' => 'add', $user ? $user->username : null, '_ext' => 'json'], true) ?>',
+                    url: '<?= Router::url(['controller' => 'Invoices', 'action' => 'add', $user ? $user->username : null, '_ext' => 'json', '_ssl' => $this->request->getUri()->getHost() != 'localhost'], true) ?>',
                     type: 'json',
                     method: 'post',
                     data: {
@@ -105,7 +105,7 @@ use Cake\Routing\Router;
                 .done(function(data, textStatus, jqXHR) {
                     console.log(data);
                     if (data.success !== undefined && data.success) {
-                        window.location.replace('<?= Router::url(['controller' => 'Invoices', 'action' => 'edit'], true) ?>/' + data.invoice.id);
+                        window.location.replace('<?= Router::url(['controller' => 'Invoices', 'action' => 'edit', '_ssl' => $this->request->getUri()->getHost() != 'localhost'], true) ?>/' + data.invoice.id);
                     } else {
                         alert('Something went wrong.');
                     }
