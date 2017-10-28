@@ -31,6 +31,9 @@
         $('#intro').hide();
         $('#scanner').show();
 
+        Webcam.set('constraints', {
+            facingMode: { exact: 'environment' }
+        });
         Webcam.attach('#camera');
 
         return false;
