@@ -1,43 +1,35 @@
 <?php
 /**
  * @var \App\View\AppView $this
+ * @var \App\Model\Entity\Invoice[]|\Cake\Collection\CollectionInterface $invoices
  */
+
+$this->assign('title', __('Invoices'));
 ?>
-<style>
-    .navbar-brand img {
-        display: none;
-    }
-</style>
-<div class="text-center" id="intro">
-    <p style="margin-bottom: 50px;"><?= $this->Html->image('logo_big.png') ?></p>
-    <h3 style="margin-bottom: 50px;"><?= __('Logged in as {0}', $this->Auth->user('full_name')) ?></h3>
-    <a href="#" class="btn btn-primary btn-lg btn-camera" id="showCamera"><i class="fa fa-camera fa-3x"></i></a>
-    <p style="margin-top: 50px;"><?= __('Photograph invoice to spike it') ?></p>
-</div>
-<div id="scanner" style="display: none">
-    <div style="max-width:500px; margin: 0 auto;">
-        <div class="camera-wrapper">
-            <div id="camera"></div>
+<ul class="nav nav-pills" style="margin-bottom:10px;">
+    <li><?= $this->Html->link(__('Scan'), ['action' => 'add']) ?></li>
+    <li><?= $this->Html->link(__('Suppliers'), ['controller' => 'Suppliers', 'action' => 'index']) ?></li>
+    <li><?= $this->Html->link(__('Payments'), ['controller' => 'Payments', 'action' => 'index']) ?></li>
+</ul>
+<div class="invoices index large-9 medium-8 columns content">
+    <?php foreach ($invoices as $invoice): ?>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <?= $this->Html->link(__('#{0}, {1}', $invoice->number, $invoice->supplier->name), ['action' => 'view', $invoice->id]) ?>
+                <strong class="pull-right"><?= $this->Number->currency($invoice->amount) ?></strong>
+            </div>
+            <div class="panel-body">
+                <div class="pull-right">
+                <?= $this->Html->link($this->Image->display($invoice->scan, 'sm'), $this->Image->imageUrl($invoice->scan, 'lg'), ['escape' => false, 'class' => 'thumbnail', 'target' => '_blank', 'style' => 'max-width:80px']) ?>
+                </div>
+                <strong><?= __('Date:') ?></strong> <?= $invoice->invoice_date->nice() ?><br />
+                <strong><?= __('Due:') ?></strong> <?= $invoice->invoice_date->nice() ?><br />
+                <strong><?= __('Mapped Account:') ?></strong> <?= h($invoice->mapped_account) ?><br /><br />
+                <strong><?= __('Approved:') ?></strong> <?php if ($invoice->is_approved): ?><span class="label label-success"><?= __('Yes') ?></span><?php else: ?><span class="label label-danger"><?= __('No') ?></span><?php endif; ?><br />
+                <strong><?= __('Paid:') ?></strong> <?php if ($invoice->is_paid): ?><span class="label label-success"><?= __('Yes') ?></span><?php else: ?><span class="label label-danger"><?= __('No') ?></span><?php endif; ?><br />
+            </div>
         </div>
-    </div>
-    <a href="#" class="btn btn-primary btn-lg btn-camera" id="takeSnapshot"><i class="fa fa-camera fa-2x"></i></a>
+    <?php endforeach; ?>
 </div>
-<?php $this->Html->script('webcam.min.js', ['block' => true]) ?>
-<?php $this->append('script'); ?>
-<script>
-    $('#showCamera').on('click', function(e) {
-        e.preventDefault();
 
-        $('#intro').hide();
-        $('#scanner').show();
-
-        Webcam.set('constraints', {
-            facingMode: { exact: 'environment' }
-        });
-        Webcam.attach('#camera');
-
-        return false;
-    })
-</script>
-<?php $this->end(); ?>
-
+<?= $this->element('pagination') ?>

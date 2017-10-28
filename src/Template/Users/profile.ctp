@@ -5,5 +5,5 @@
  */
 
 //$this->assign('title', h($user->full_name));
-debug($data);
+//debug($data);
 ?>

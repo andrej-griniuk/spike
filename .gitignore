@@ -34,3 +34,4 @@ nbproject/* # NetBeans
 .sass-cache/ # Sass preprocessor
 
 webroot/img/invoices
+config/Migrations/schema-dump-default.lock

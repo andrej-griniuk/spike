@@ -218,3 +218,7 @@ if (Configure::read('debug')) {
 }
 
 Plugin::load('BootstrapUI');
+Plugin::load('Burzum/FileStorage');
+Plugin::load('Burzum/Imagine');
+
+include('file_storage.php');

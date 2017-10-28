@@ -12,7 +12,11 @@
         "josegonzalez/dotenv": "2.*",
         "cakephp/cakephp": "~3.5.4",
         "friendsofcake/bootstrap-ui": "^1.2",
-        "jordikroon/google-vision": "^1.5"
+        "jordikroon/google-vision": "^1.5",
+        "burzum/file-storage": "^1.2",
+        "burzum/cakephp-imagine-plugin": "^2.1",
+        "cloudinary/cloudinary_php": "^1.8",
+        "friendsofcake/crud-view": "^0.9.4"
     },
     "require-dev": {
         "psy/psysh": "@stable",
@@ -38,7 +42,12 @@
         }
     },
     "scripts": {
-        "post-install-cmd": "App\\Console\\Installer::postInstall",
+        "post-install-cmd": [
+            "App\\Console\\Installer::postInstall",
+            "php bin/cake.php migrations migrate --plugin=Burzum/FileStorage",
+            "php bin/cake.php migrations migrate",
+            "php bin/cake.php orm_cache clear"
+        ],
         "post-create-project-cmd": "App\\Console\\Installer::postInstall",
         "post-autoload-dump": "Cake\\Composer\\Installer\\PluginInstaller::postAutoloadDump",
         "check": [

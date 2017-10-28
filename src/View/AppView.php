@@ -22,6 +22,7 @@ use Cake\View\View;
  * Your application’s default view class
  *
  * @property \App\View\Helper\AuthHelper $Auth
+ * @property \Burzum\FileStorage\View\Helper\ImageHelper $Image
  * @link https://book.cakephp.org/3.0/en/views.html#the-app-view
  */
 class AppView extends View
@@ -42,5 +43,14 @@ class AppView extends View
         $this->initializeUI(['layout' => false]);
 
         $this->loadHelper('Auth');
+        $this->loadHelper('Burzum/FileStorage.Image');
+
+        $this->Form->setTemplates([
+            'nestingLabel' => '{{hidden}}{{input}}<label{{attrs}}>{{text}}</label>',
+            //'error' => '<div class="alert alert-danger">{{content}}</div>',
+            //'inputContainer' => '<div class="form-control">{{content}}</div>',
+        ]);
+
+        $this->Form->addWidget('datetime', ['App\View\Widget\DateTimeWidget', 'select']);
     }
 }

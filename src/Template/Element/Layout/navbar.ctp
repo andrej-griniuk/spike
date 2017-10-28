@@ -17,10 +17,13 @@
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
                 <?php if ($this->Auth->user()): ?>
+                    <li><?= $this->Html->link(__('Suppliers'), ['controller' => 'Suppliers', 'action' => 'index']) ?></li>
+                    <li><?= $this->Html->link(__('Invoices'), ['controller' => 'Invoices', 'action' => 'index']) ?></li>
+                    <li><?= $this->Html->link(__('Scan'), ['controller' => 'Invoices', 'action' => 'add']) ?></li>
                     <li role="presentation" class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"> <?= h($this->Auth->user('full_name')) ?> <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><?= $this->Html->link(__('Scan'), ['controller' => 'Invoices', 'action' => 'index']) ?></li>
+                            <li><?= $this->Html->link(__('Profile'), ['controller' => 'Users', 'action' => 'profile']) ?></li>
                             <li><?= $this->Html->link(__('Sign Out'), ['controller' => 'Users', 'action' => 'logout']) ?></li>
                         </ul>
                     </li>
